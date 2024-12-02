@@ -303,3 +303,6 @@ v4.1
 * Benchmark command added.
 * Unlock signatures updated.
 * `-psname` option added.
+
+Latest:
+* Linux stability improvements and kernel module loading enhancements.

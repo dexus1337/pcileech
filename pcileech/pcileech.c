@@ -1,6 +1,6 @@
 // pcileech.c : implementation of core pcileech functionality.
 //
-// (c) Ulf Frisk, 2016-2022
+// (c) Ulf Frisk, 2016-2024
 // Author: Ulf Frisk, pcileech@frizk.net
 //
 #include "pcileech.h"
@@ -216,7 +216,7 @@ BOOL PCILeechConfigIntialize(_In_ DWORD argc, _In_ char* argv[])
         ctxMain->cfg.pbIn = LocalAlloc(LMEM_ZEROINIT, 0x40000);
     }
     // set dummy qwAddrMax value (if possible) to disable auto-detect in LeechCore.
-    if((ctxMain->cfg.tpAction == TLP) || (ctxMain->cfg.tpAction == DISPLAY) || (ctxMain->cfg.tpAction == PAGEDISPLAY)) {
+    if((ctxMain->cfg.tpAction == TLP) || (ctxMain->cfg.tpAction == DISPLAY) || (ctxMain->cfg.tpAction == PAGEDISPLAY) || (ctxMain->cfg.tpAction == NONE) || (ctxMain->cfg.tpAction == BENCHMARK)) {
         ctxMain->cfg.paAddrMax = -1;
     }
     // disable memory auto-detect when memmap is specified
@@ -346,6 +346,9 @@ int main(_In_ int argc, _In_ char* argv[])
         PCILeechFreeContext();
         return 0;
     }
+    // enable ctrl+c event handler if remote (to circumvent blocking thread)
+    PCILeechCtrlHandlerInitialize();
+    // initialize device connection
     result = DeviceOpen();
     if(!result) {
         printf("PCILEECH: Failed to connect to the device.\n");
@@ -373,8 +376,6 @@ int main(_In_ int argc, _In_ char* argv[])
     if(ctxMain->cfg.paAddrMax == 0) {
         LcGetOption(ctxMain->hLC, LC_OPT_CORE_ADDR_MAX, &ctxMain->cfg.paAddrMax);
     }
-    // enable ctrl+c event handler if remote (to circumvent blocking thread)
-	PCILeechCtrlHandlerInitialize();
     // main dispatcher
     switch(ctxMain->cfg.tpAction) {
         case NONE:
