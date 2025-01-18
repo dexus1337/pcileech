@@ -1,6 +1,6 @@
 // kmd.c : implementation related to operating systems kernel modules functionality.
 //
-// (c) Ulf Frisk, 2016-2024
+// (c) Ulf Frisk, 2016-2025
 // Author: Ulf Frisk, pcileech@frizk.net
 //
 #include "kmd.h"
@@ -1393,7 +1393,7 @@ BOOL KMDOpen_WINX64_3_VMM()
         printf("KMD: Failed get hook (ntoskrnl.exe) #3\n");
         goto fail;
     }
-    if((pbHookOriginalData[0x00] == 0xE9)) {
+    if(pbHookOriginalData[0x00] == 0xE9) {
         printf("KMD: Hook already inserted #4\n");
         goto fail_hookrestore;
     }

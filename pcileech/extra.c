@@ -1,6 +1,6 @@
 // extra.c : implementation related various extra functionality such as exploits.
 //
-// (c) Ulf Frisk, 2016-2022
+// (c) Ulf Frisk, 2016-2025
 // Author: Ulf Frisk, pcileech@frizk.net
 //
 #include "extra.h"
@@ -62,9 +62,9 @@ BOOL Extra_MacFVRecover_Analyze(_In_ PBYTE pb512M)
 #ifdef _WIN32
                     printf("MAC_FVRECOVER: PASSWORD CANDIDATE: %S\n", (LPWSTR)(pb + dwCandidate));
 #endif /* _WIN32 */
-#ifdef LINUX
+#if defined(LINUX) || defined(MACOS)
                     printf("MAC_FVRECOVER: PASSWORD CANDIDATE (hex8): %llx\n", *(PQWORD)(pb + dwCandidate));
-#endif /* LINUX */
+#endif /* LINUX || MACOS */
                 }
                 break;
             }
@@ -271,7 +271,7 @@ VOID Action_TlpTxLoop()
     }
     LcGetOption(ctxMain->hLC, LC_OPT_FPGA_VERSION_MAJOR, &qwFpgaVersionMajor);
     LcGetOption(ctxMain->hLC, LC_OPT_FPGA_VERSION_MINOR, &qwFpgaVersionMinor);
-    if((qwFpgaVersionMajor < 4) || ((qwFpgaVersionMajor == 4) && (qwFpgaVersionMajor < 2))) {
+    if((qwFpgaVersionMajor < 4) || ((qwFpgaVersionMajor == 4) && (qwFpgaVersionMinor < 2))) {
         printf("Action_TlpTxLoop: FPGA version not supported (bitstream v4.2 or later required).\n");
         return;
     }
